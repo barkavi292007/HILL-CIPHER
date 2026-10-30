@@ -35,68 +35,51 @@ STEP-5: Combine all these groups to get the complete cipher text.
 
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
-int main() {
-    char plain[100], cipher[100];
+int main()
+{
+    char text[] = "BHARGAVI";
+    char encrypted[100], decrypted[100];
     int key[2][2] = {{3, 3}, {2, 5}};
-    int inv[2][2] = {{15, 17}, {20, 9}};
-    int i, a, b, x, y, n;
+    int i, a, b, c, d;
 
-    printf("Enter plaintext: ");
-    scanf("%99s", plain);
+    printf("Plaintext: %s\n", text);
 
-    n = strlen(plain);
+    // Encryption
+    for(i = 0; i < strlen(text); i += 2)
+    {
+        a = text[i] - 'A';
+        b = text[i+1] - 'A';
 
-    if (n % 2 != 0) {
-        printf("Plaintext length must be even.\n");
-        return 0;
+        encrypted[i] = ((key[0][0]*a + key[0][1]*b) % 26) + 'A';
+        encrypted[i+1] = ((key[1][0]*a + key[1][1]*b) % 26) + 'A';
     }
+    encrypted[i] = '\0';
 
-    for (i = 0; i < n; i++) {
-        if (!isalpha((unsigned char)plain[i])) {
-            printf("Enter alphabets only.\n");
-            return 0;
-        }
-        plain[i] = toupper((unsigned char)plain[i]);
+    printf("Encrypted Text: %s\n", encrypted);
+
+    // Decryption (Inverse Key = {{15, 17}, {20, 9}})
+    for(i = 0; i < strlen(encrypted); i += 2)
+    {
+        a = encrypted[i] - 'A';
+        b = encrypted[i+1] - 'A';
+
+        c = (15*a + 17*b) % 26;
+        d = (20*a + 9*b) % 26;
+
+        decrypted[i] = c + 'A';
+        decrypted[i+1] = d + 'A';
     }
+    decrypted[i] = '\0';
 
-    for (i = 0; i < n; i += 2) {
-        a = plain[i] - 'A';
-        b = plain[i + 1] - 'A';
-
-        x = (key[0][0] * a + key[0][1] * b) % 26;
-        y = (key[1][0] * a + key[1][1] * b) % 26;
-
-        cipher[i] = x + 'A';
-        cipher[i + 1] = y + 'A';
-    }
-    cipher[n] = '\0';
-
-    printf("Encrypted text: %s\n", cipher);
-
-    for (i = 0; i < n; i += 2) {
-        a = cipher[i] - 'A';
-        b = cipher[i + 1] - 'A';
-
-        x = (inv[0][0] * a + inv[0][1] * b) % 26;
-        y = (inv[1][0] * a + inv[1][1] * b) % 26;
-
-        plain[i] = x + 'A';
-        plain[i + 1] = y + 'A';
-    }
-    plain[n] = '\0';
-
-    printf("Decrypted text: %s\n", plain);
+    printf("Decrypted Text: %s\n", decrypted);
 
     return 0;
 }
 
 ```
 ## OUTPUT
-
-<img width="1913" height="775" alt="Screenshot 2026-10-26 110018" src="https://github.com/user-attachments/assets/aa76aa4e-5ce3-43a4-9294-5d54ffe3400d" />
-
+<img width="921" height="478" alt="image" src="https://github.com/user-attachments/assets/57c9e89a-2fd6-4a1e-a8b9-0030c198b1d9" />
 
 ## RESULT
 Thus, the Hill Cipher encryption and decryption program was implemented successfully using C.
